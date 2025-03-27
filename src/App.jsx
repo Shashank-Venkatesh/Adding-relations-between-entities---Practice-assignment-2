@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ProductCard from './components/ProductCard';
+import ProductCard from './Components/ProductCard';
 import './App.css';
 
 const initialProducts = [
@@ -30,12 +30,27 @@ const initialProducts = [
 ];
 
 function App() {
+  const [products, setProducts] = useState(initialProducts);
 
- 
+  const handleRating = (id, newRating) => {
+    setProducts(products.map(product => {
+      if (product.id === id) {
+        const updatedTotalRatings = product.totalRatings + 1;
+        const updatedAvgRating = ((product.avgRating * product.totalRatings) + newRating) / updatedTotalRatings;
+        return { ...product, avgRating: updatedAvgRating, totalRatings: updatedTotalRatings };
+      }
+      return product;
+    }));
+  };
 
   return (
     <div>
-     {/* code here */}
+      <h1>Product Ratings</h1>
+      <div className="product-list">
+        {products.map(product => (
+          <ProductCard key={product.id} product={product} onRate={handleRating} />
+        ))}
+      </div>
     </div>
   );
 }
